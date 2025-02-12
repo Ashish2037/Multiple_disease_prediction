@@ -83,11 +83,10 @@ if (selected == 'Diabetes Prediction'):
 
 
 
-
 # Heart Disease Prediction Page
-if (selected == 'Heart Disease Prediction'):
+if selected == 'Heart Disease Prediction':
     
-    # page title
+    # Page title
     st.title('Heart Disease Prediction using ML')
     
     col1, col2, col3 = st.columns(3)
@@ -96,7 +95,7 @@ if (selected == 'Heart Disease Prediction'):
         age = st.text_input('Age')
         
     with col2:
-        sex = st.text_input('Sex(1 for male, 0 for female)')
+        sex = st.text_input('Sex (1 for male, 0 for female)')
         
     with col3:
         cp = st.text_input('Chest Pain types')
@@ -105,10 +104,10 @@ if (selected == 'Heart Disease Prediction'):
         trestbps = st.text_input('Resting Blood Pressure')
         
     with col2:
-        chol = st.text_input('Serum Cholestoral in mg/dl')
+        chol = st.text_input('Serum Cholesterol in mg/dl')
         
     with col3:
-        fbs = st.text_input('Fasting Blood Sugar > 120 mg/dl')
+        fbs = st.text_input('Fasting Blood Sugar > 120 mg/dl (1 = True, 0 = False)')
         
     with col1:
         restecg = st.text_input('Resting Electrocardiographic results')
@@ -117,7 +116,7 @@ if (selected == 'Heart Disease Prediction'):
         thalach = st.text_input('Maximum Heart Rate achieved')
         
     with col3:
-        exang = st.text_input('Exercise Induced Angina')
+        exang = st.text_input('Exercise Induced Angina (1 = Yes, 0 = No)')
         
     with col1:
         oldpeak = st.text_input('ST depression induced by exercise')
@@ -126,28 +125,46 @@ if (selected == 'Heart Disease Prediction'):
         slope = st.text_input('Slope of the peak exercise ST segment')
         
     with col3:
-        ca = st.text_input('Major vessels colored by flourosopy')
+        ca = st.text_input('Major vessels colored by fluoroscopy')
         
     with col1:
-        thal = st.text_input('thal: 0 = normal; 1 = fixed defect; 2 = reversable defect')
+        thal = st.text_input('Thal: 0 = normal; 1 = fixed defect; 2 = reversible defect')
         
-        
-     
-     
-    # code for Prediction
+    # Code for Prediction
     heart_diagnosis = ''
     
-    # creating a button for Prediction
-    
+    # Creating a button for Prediction
     if st.button('Heart Disease Test Result'):
-        heart_prediction = heart_disease_model.predict([[age, sex, cp, trestbps, chol, fbs, restecg,thalach,exang,oldpeak,slope,ca,thal]])                          
+        try:
+            # Convert inputs to the correct numeric type (float or int)
+            age = float(age)
+            sex = int(sex)
+            cp = int(cp)
+            trestbps = float(trestbps)
+            chol = float(chol)
+            fbs = int(fbs)
+            restecg = int(restecg)
+            thalach = float(thalach)
+            exang = int(exang)
+            oldpeak = float(oldpeak)
+            slope = int(slope)
+            ca = int(ca)
+            thal = int(thal)
+
+            # Make prediction
+            heart_prediction = heart_disease_model.predict([[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]])                          
+            
+            # Display result
+            if heart_prediction[0] == 1:
+                heart_diagnosis = 'The person is having heart disease'
+            else:
+                heart_diagnosis = 'The person does not have any heart disease'
         
-        if (heart_prediction[0] == 1):
-          heart_diagnosis = 'The person is having heart disease'
-        else:
-          heart_diagnosis = 'The person does not have any heart disease'
-        
+        except ValueError:
+            st.error("Please enter valid numeric values for all fields.")
+
     st.success(heart_diagnosis)
+
         
     
     
